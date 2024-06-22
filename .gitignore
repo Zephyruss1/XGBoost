@@ -1,0 +1,22 @@
+# Ignore Python virtual environments
+venv/
+env/
+
+# Ignore Python bytecode
+__pycache__/
+*.pyc
+
+# Ignore distribution / build directories
+dist/
+build/
+*.egg-info/
+
+# Ignore Jupyter notebook checkpoints
+.ipynb_checkpoints/
+
+# Ignore all .wheel files
+*.whl
+
+# Ignore specific directories or files
+path/to/directory/
+path/to/file
