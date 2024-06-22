@@ -8,6 +8,7 @@ Purpose: Create Model           |
 import xgboost as xgb
 import optuna
 import numpy as np
+epsilon = 1e-5
 
 class XGBoost:
     def __init__(self, args, X_train, X_test, y_train, y_test):
@@ -35,12 +36,16 @@ class XGBoost:
     def weights(self, value):
         assert isinstance(value, np.ndarray) and value.shape == self._weights.shape, "weights must be a numpy array and have the same shape as the current weights"
         self._weights = value
+    
+    def fit(self):
+        self.model = xgb.train({
+            'learning_rate': self.lr,
+            'gamma': self.gamma,
+            'objective': 'reg:squarederror'
+        }, xgb.DMatrix(self.X_train, self.y_train), num_boost_round=self.iteration)
         
-    def fit(self, X, y):
-        self.model = xgb.train(self.params, xgb.DMatrix(X, y))
-
-    def predict(self, X):
-        return self.model.predict(xgb.DMatrix(X))
+    def predict(self):
+        return self.model.predict(xgb.DMatrix(self.X_test))
 
 
 
