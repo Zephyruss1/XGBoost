@@ -13,6 +13,8 @@ def get_options():
     parser.add_argument('--optimizer', type=str, default='SGDW', help='Using GD for update')
     parser.add_argument('--iteration', type=int, default=50, help='Maximum update iterations if not exit automatically')
     parser.add_argument('--gamma', type=float, default=0.1, help='Penalty term for logistic regression')
+    parser.add_argument('--max_depth', type=int, default=3, help='Maximum depth of the tree')
+    parser.add_argument('--n_estimators', type=int, default=100, help='Maximum depth of the tree')
 
     args = parser.parse_args()
     return args
