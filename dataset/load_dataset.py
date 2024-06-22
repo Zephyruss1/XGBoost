@@ -9,6 +9,7 @@ Purpose: Load Dataset           |
 import subprocess
 import os
 import pandas as pd
+import numpy as np
 
 class InstallData:
     """
@@ -83,15 +84,47 @@ class DataCleaning:
 
         return self.data
 
+class LoadDataset:
+    def __init__(self):
+        self.data = DataCleaning().clearData()
+
+    def splitData(self, test_size=0.2, random_state=42):
+        # Ensure reproducibility
+        np.random.seed(random_state)
+        
+        # Generate shuffled indices
+        indices = np.arange(len(self.data))
+        np.random.shuffle(indices)
+        
+        # Calculate split index
+        split_idx = int(len(self.data) * (1 - test_size))
+        
+        # Split indices
+        train_indices, test_indices = indices[:split_idx], indices[split_idx:]
+        
+        # Splitting features
+        X = self.data.drop('HiringDecision', axis=1)
+        y = self.data['HiringDecision']
+        
+        # Use indices to create train/test splits
+        X_train, X_test = X.iloc[train_indices], X.iloc[test_indices]
+        y_train, y_test = y.iloc[train_indices], y.iloc[test_indices]
+        
+        print(f"X_train: {X_train.shape}, X_test: {X_test.shape}\ny_train: {y_train.shape}, y_test: {y_test.shape}")
+        return (X_train, X_test), (y_train, y_test)
+    
 if __name__ == "__main__":
     # Downloading dataset and unzipping
     installer = InstallData("kaggle datasets download -d rabieelkharoua/predicting-hiring-decisions-in-recruitment-data",
                              "/home/zephyrus/WSL-Projects/spotify-problem/dataset/")
     installer.downloadZipfile()
     installer.unzipFile()
-    # import sys; sys.exit(0)
     
     # Cleaning data
     cleaner = DataCleaning()
     cleaner.checkData()
     cleaner.clearData()
+    
+    # Splitting data
+    load = LoadDataset()
+    load.splitData()
