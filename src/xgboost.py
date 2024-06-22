@@ -16,7 +16,7 @@ class XGBoost:
         self.X_test = X_test
         self.y_train = y_train
         self.y_test = y_test
-
+        self._weights = np.zeros_like(X_train)
         # Load options
         self.lr = args.lr
         self.optimizer = args.optimizer
@@ -28,13 +28,13 @@ class XGBoost:
         self.t = 0
 
     @property
-    def _weights(self):
-        return self.weights
+    def weights(self):
+        return self._weights
     
-    @_weights.setter
-    def _weights(self, value):
+    @weights.setter
+    def weights(self, value):
         assert isinstance(value, np.ndarray) and value.shape == self._weights.shape, "weights must be a numpy array and have the same shape as the current weights"
-        self.weights = value
+        self._weights = value
         
     def fit(self, X, y):
         self.model = xgb.train(self.params, xgb.DMatrix(X, y))
