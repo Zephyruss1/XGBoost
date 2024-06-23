@@ -23,7 +23,7 @@ path/to/directory/
 path/to/file
 
 # Ignore all ipynb files
-.ipynb
+*.ipynb
 
 # 1
-/home/zephyrus/WSL-Projects/spotify-problem/todo.txt
+*.txt
