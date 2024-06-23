@@ -51,7 +51,7 @@ class XGBoost:
         self.prediction += self.lr * tree.predict(self.X_train)
 
         self.trees.append(tree)
-
+        
     def mse(self):
         return np.mean((self.y_test - self.predict()) ** 2)
 

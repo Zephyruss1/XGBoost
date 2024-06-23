@@ -27,7 +27,7 @@ def main_run():
         (X_train, X_test), (y_train, y_test) = dataset_loader.splitData()  # Step 2: Call the method on the instance
 
         model = XGBoost(args=args, X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test)
-        print(f"[ARGS INFO] Lr: {args.lr} | Max Depth: {args.max_depth} | N-Estimators: {args.n_estimators}")
+        print(f"[ARGS INFO] Learning Rate: {args.lr} | Max Depth: {args.max_depth} | N-Estimators: {args.n_estimators}")
         print("---" * 10)
 
         for i in range(args.n_estimators):
@@ -35,6 +35,6 @@ def main_run():
             model.fit_single_iteration()
             t1 = time.time()
             total_ms  = (t1 - t0) * 1000
-            print(f"[RUN INFO] Iteration: {i+1} | {total_ms:.2f} ms | MSE: {model.mse()}")
+            print(f"[RUN INFO] Iteration: {i+1} | {total_ms:.2f} ms | MSE: {model.mse():.2f}")
 
 main_run()
