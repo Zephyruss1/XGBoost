@@ -21,3 +21,9 @@ build/
 # Ignore specific directories or files
 path/to/directory/
 path/to/file
+
+# Ignore all ipynb files
+.ipynb
+
+# 1
+.txt
