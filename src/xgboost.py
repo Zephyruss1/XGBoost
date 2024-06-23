@@ -12,20 +12,21 @@ epsilon = 1e-5
 
 class XGBoost:
     def __init__(self, args, X_train, X_test, y_train, y_test):
-        # Load data
+        # Initialize self variables
         self.X_train = X_train
         self.X_test = X_test
         self.y_train = y_train
         self.y_test = y_test
         self._weights = np.zeros_like(X_train)
-        # Load options
+        # Initialize argparse options
         self.lr = args.lr
         self.optimizer = args.optimizer
         self.iteration = args.iteration
         self.gamma = args.gamma
         self.max_depth = args.max_depth
         self.n_estimators = args.n_estimators
-        self.initial_prediction = self.max_depth
+        # Initialize the prediction with the mean of the target values
+        self.initial_prediction = np.mean(y_train)
         self.trees = []
         # Initialize M & N for specific optimizers
         self.m = np.zeros_like(self.weights)
@@ -56,14 +57,17 @@ class XGBoost:
             prediction += self.lr * tree.predict(self.X_train)
 
             self.trees.append(tree)
-            
+
+    def mse(self):
+        return np.mean((self.y_test - self.predict()) ** 2)
+
     def predict(self):
         # Start with initial prediction
-        prediction = np.full(self.X_train.shape[0], self.initial_prediction)
+        prediction = np.full(self.X_test.shape[0], self.initial_prediction)
         
         # Add predictions from all trees
         for tree in self.trees:
-            prediction += self.learning_rate * tree.predict(self.X_train)
+            prediction += self.lr * tree.predict(self.X_test)
         
         return prediction
 
