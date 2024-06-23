@@ -32,7 +32,7 @@ def main_run():
 
         for i in range(args.n_estimators):
             t0 = time.time()
-            model.fit_single_iteration()  # her iterasyon için ayrı bir method ekleyelim
+            model.fit_single_iteration()
             t1 = time.time()
             total_ms  = (t1 - t0) * 1000
             print(f"[RUN INFO] Iteration: {i+1} | {total_ms:.2f} ms | MSE: {model.mse()}")
