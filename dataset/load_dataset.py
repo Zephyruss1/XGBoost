@@ -31,7 +31,7 @@ class InstallData:
                 self.zip = subprocess.run(self.url, shell=True, check=True)
                 return self.zip
             else:
-                print("[INFO] Zip file already exists in the directory")
+                print("[DATA INFO] Zip file already exists in the directory")
         except Exception as e:
             print(f"[ERROR] A error found. {e}")
     
@@ -47,9 +47,9 @@ class InstallData:
                 with zipfile.ZipFile(zip_folder) as zipfile:
                     zipfile.extractall(self.target_folder)
                 os.remove(zip_folder)
-                print("[INFO] Zip file removed after extracting successfully")
+                print("[DATA INFO] Zip file removed after extracting successfully")
             else:
-                print(f"[INFO] File already exists in the directory")
+                print(f"[DATA INFO] File already exists in the directory")
         else:
             print("[ERROR] Zip file not found in the directory")
 
@@ -71,16 +71,16 @@ class DataCleaning:
     def clearData(self):
         if self.data.isna().sum().any():
             self.data.dropna(axis=1, inplace=True)
-            print("[INFO] Dropped NaN values successfully")
+            print("[DATA INFO] Dropped NaN values successfully")
         elif self.data.duplicated().sum() > 0:
             self.data.drop_duplicates(inplace=True)
-            print("[INFO] Dropped duplicates values successfully")
+            print("[DATA INFO] Dropped duplicates values successfully")
         else:
-            print("[INFO] No missing values found in the dataset")
+            print("[DATA INFO] No missing values found in the dataset")
             return self.data
         # Write the cleaned DataFrame back to the CSV file
         self.data.to_csv("/home/zephyrus/WSL-Projects/spotify-problem/dataset/recruitment_data.csv", index=False, encoding='utf-8')
-        print("[INFO] Cleaned data has been written back to the CSV file.")
+        print("[DATA INFO] Cleaned data has been written back to the CSV file.")
 
         return self.data
 
@@ -111,6 +111,7 @@ class LoadDataset:
         y_train, y_test = y.iloc[train_indices], y.iloc[test_indices]
         
         print(f"X_train: {X_train.shape}, X_test: {X_test.shape}\ny_train: {y_train.shape}, y_test: {y_test.shape}")
+        print("---" * 10)
         return (X_train, X_test), (y_train, y_test)
     
 if __name__ == "__main__":
