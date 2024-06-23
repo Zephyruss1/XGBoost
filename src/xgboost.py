@@ -6,7 +6,6 @@ Purpose: Create Model           |
 ---------------------------------
 """
 from sklearn.tree import DecisionTreeRegressor
-import optuna
 import numpy as np
 epsilon = 1e-5
 
@@ -21,13 +20,12 @@ class XGBoost:
         # Initialize argparse options
         self.lr = args.lr
         self.optimizer = args.optimizer
-        self.iteration = args.iteration
-        self.gamma = args.gamma
         self.max_depth = args.max_depth
         self.n_estimators = args.n_estimators
         # Initialize the prediction with the mean of the target values
         self.initial_prediction = np.mean(y_train)
         self.trees = []
+        self.prediction = np.full(self.y_train.shape, self.initial_prediction)
         # Initialize M & N for specific optimizers
         self.m = np.zeros_like(self.weights)
         self.n = np.zeros_like(self.weights)
@@ -42,21 +40,17 @@ class XGBoost:
         assert isinstance(value, np.ndarray) and value.shape == self._weights.shape, "weights must be a numpy array and have the same shape as the current weights"
         self._weights = value
     
-    def fit(self):
-        self.initial_prediction = np.mean(self.y_train)
-        prediction = np.full(self.y_train.shape, self.initial_prediction)
+    def fit_single_iteration(self):
+        gradients = self.y_train - self.prediction # pseudo-residuals
 
-        for _ in range(self.n_estimators):
-            gradients = self.y_train - prediction # pseudo-residuals
+        # Fit a regression tree to the gradients
+        tree = DecisionTreeRegressor(max_depth=self.max_depth)
+        tree.fit(self.X_train, gradients)
 
-            # Fit a regression tree to the gradients
-            tree = DecisionTreeRegressor(max_depth=self.max_depth)
-            tree.fit(self.X_train, gradients)
+        # Update the predictions
+        self.prediction += self.lr * tree.predict(self.X_train)
 
-            # Update the predictions
-            prediction += self.lr * tree.predict(self.X_train)
-
-            self.trees.append(tree)
+        self.trees.append(tree)
 
     def mse(self):
         return np.mean((self.y_test - self.predict()) ** 2)
