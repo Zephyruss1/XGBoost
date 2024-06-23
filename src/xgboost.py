@@ -41,29 +41,29 @@ class XGBoost:
         assert isinstance(value, np.ndarray) and value.shape == self._weights.shape, "weights must be a numpy array and have the same shape as the current weights"
         self._weights = value
     
-    def fit(self, X, y):
-        self.initial_prediction = np.mean(y)
-        prediction = np.full(y.shape, self.initial_prediction)
+    def fit(self):
+        self.initial_prediction = np.mean(self.y_train)
+        prediction = np.full(self.y_train.shape, self.initial_prediction)
 
         for _ in range(self.n_estimators):
-            gradients = y - prediction # pseudo-residuals
+            gradients = self.y_train - prediction # pseudo-residuals
 
             # Fit a regression tree to the gradients
             tree = DecisionTreeRegressor(max_depth=self.max_depth)
-            tree.fit(X, gradients)
+            tree.fit(self.X_train, gradients)
 
             # Update the predictions
-            prediction += self.lr * tree.predict(X)
+            prediction += self.lr * tree.predict(self.X_train)
 
             self.trees.append(tree)
             
-    def predict(self, X):
+    def predict(self):
         # Start with initial prediction
-        prediction = np.full(X.shape[0], self.initial_prediction)
+        prediction = np.full(self.X_train.shape[0], self.initial_prediction)
         
         # Add predictions from all trees
         for tree in self.trees:
-            prediction += self.learning_rate * tree.predict(X)
+            prediction += self.learning_rate * tree.predict(self.X_train)
         
         return prediction
 
