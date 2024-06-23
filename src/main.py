@@ -7,14 +7,11 @@ Purpose: Run the project        |
 """
 
 import sys
-"------------------------------------------------------------------"
-sys.append("/home/zephyrus/WSL-Projects/spotify-problem/src")
-sys.append("/home/zephyrus/WSL-Projects/spotify-problem/dataset")
-"------------------------------------------------------------------"
-import os
-import numpy as np
-import pickle as pkl
-from dataset import load_dataset
+from pathlib import Path
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+
+import time 
+from dataset.load_dataset import LoadDataset
 from xgboost import XGBoost
 from options import get_options
 import logging
@@ -22,6 +19,20 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+args = get_options()
+def main_run():
+    if __name__ == '__main__':
+        dataset_loader = LoadDataset()  # Step 1: Instantiate the class
+        (X_train, X_test), (y_train, y_test) = dataset_loader.splitData()  # Step 2: Call the method on the instance
 
-if __name__ == '__main__':
-    pass
+        model = XGBoost(args=args, X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test)
+        print("---" * 10)
+        print(f"[ARGS INFO] Lr: {args.lr} | Max Depth: {args.max_depth} | N-Estimators: {args.n_estimators}")
+        for i in range(args.iteration):
+            t0 = time.time()
+            model.fit()
+            t1 = time.time()
+            total_ms  = (t1 - t0) * 1000
+            print(f"[RUN INFO] Iteration: {i} | {total_ms:.2f} ms")
+
+main_run()
