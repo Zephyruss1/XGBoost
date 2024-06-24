@@ -109,10 +109,20 @@ class LoadDataset:
         # Use indices to create train/test splits
         X_train, X_test = X.iloc[train_indices], X.iloc[test_indices]
         y_train, y_test = y.iloc[train_indices], y.iloc[test_indices]
-        
+
         print(f"X_train: {X_train.shape}, X_test: {X_test.shape}\ny_train: {y_train.shape}, y_test: {y_test.shape}")
         print("---" * 10)
         return (X_train, X_test), (y_train, y_test)
+    
+    def standardScaler(self):
+        # Using Standard Scaler formula
+        (X_train, X_test), (y_train, y_test) = self.splitData()
+        assert X_train is not None, "X_train is not defined."
+        X_train_scaled = (X_train - X_train.mean()) / X_train.std()
+        X_test_scaled = (X_test - X_test.mean()) / X_test.std()
+        print("[DATA INFO] Data has been scaled successfully")
+        print("---" * 10)
+        return (X_train_scaled, X_test_scaled), (y_train, y_test)
     
 if __name__ == "__main__":
     # Downloading dataset and unzipping
@@ -128,4 +138,4 @@ if __name__ == "__main__":
     
     # Splitting data
     load = LoadDataset()
-    load.splitData()
+    load.standardScaler()
