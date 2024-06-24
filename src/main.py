@@ -35,6 +35,6 @@ def main_run():
             model.fit_single_iteration()
             t1 = time.time()
             total_ms  = (t1 - t0) * 1000
-            print(f"[RUN INFO] Iteration: {i+1} | {total_ms:.2f} ms | MSE: {model.mse():.2f}")
+            print(f"[RUN INFO] Iteration: {i+1} | {total_ms:.2f} ms | MSE: {model.mse():.2f} | R2 Score: {model.r2_score():.2f}")
 
 main_run()
