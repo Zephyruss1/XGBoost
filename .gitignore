@@ -27,3 +27,6 @@ path/to/file
 
 # 1
 *.txt
+
+/home/zephyrus/WSL-Projects/spotify-problem/src/original_xgboost.py
+/home/zephyrus/WSL-Projects/spotify-problem/src/fbparams.py
