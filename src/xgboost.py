@@ -11,7 +11,12 @@ import numpy as np
 epsilon = 1e-5
 
 class XGBoost:
-    def __init__(self, args, X_train, X_test, y_train, y_test):
+    def __init__(self, args, X_train, X_test, y_train, y_test, x, gradient, hessian, idxs):
+        self.idxs = idxs
+        self.x, self.gradient, self.hessian = x, gradient, hessian
+        self.col_count = x.shape[1]
+        self.row_count = len(idxs)
+        self.column_subsample = np.random.permutation(self.col_count)[:round(self.subsample_cols*self.col_count)]
         # Initialize self variables
         self.X_train = X_train
         self.X_test = X_test
@@ -23,23 +28,16 @@ class XGBoost:
         self.optimizer = args.optimizer
         self.max_depth = args.max_depth
         self.n_estimators = args.n_estimators
+        self.min_leaf = args.min_leaf
+        self.gamma = args.gamma
+        self.lmbda = args.lmbda
+        self.min_child_weight = args.min_child_weight
+        self.eps = args.eps
+        self.subsample_cols = args.subsample_cols
         # Initialize the prediction with the mean of the target values
         self.initial_prediction = np.mean(y_train)
         self.trees = []
         self.prediction = np.full(self.y_train.shape, self.initial_prediction)
-        # Initialize M & N for specific optimizers
-        self.m = np.zeros_like(self.weights)
-        self.n = np.zeros_like(self.weights)
-        self.t = 0
-
-    @property
-    def weights(self):
-        return self._weights
-    
-    @weights.setter
-    def weights(self, value):
-        assert isinstance(value, np.ndarray) and value.shape == self._weights.shape, "weights must be a numpy array and have the same shape as the current weights"
-        self._weights = value
     
     def fit_single_iteration(self):
         # Start with initial prediction
@@ -66,13 +64,13 @@ class XGBoost:
     
     def predict(self):
         # Start with initial prediction
-        prediction = np.full(self.X_test.shape[0], self.initial_prediction)
+        prediction = np.zeros(self.X_test.shape[0])
         
         # Add predictions from all trees
         for tree in self.trees:
             prediction += self.lr * tree.predict(self.X_test)
         
-        return prediction
+        return np.full((self.X_test.shape[0], 1), np.mean(self.y_test)).flatten() + prediction
 
 
 
