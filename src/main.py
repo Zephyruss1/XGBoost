@@ -29,14 +29,11 @@ def main_run():
         (X_train, X_test), (y_train, y_test) = dataset_loader.splitData()  # Step 2: Call the method on the instance
 
         regressor = Regressor(args=args, X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test)
+
         model = regressor.get_best_params()
 
-        for i in range(args.n_estimators):
-            t0 = time.time()
-            t1 = time.time()
-            total_ms = (t1 - t0) * 1000
-            print(
-                f"[RUN INFO] Iteration: {i + 1} | {total_ms:.2f} ms | MSE: {regressor.mse(model=model):.2f} | R2 Score: {regressor.r2_score(model=model):.2f}")
+        print(
+            f"[RUN INFO] | MSE: {regressor.mse(model=model):.2f} | R2 Score: {regressor.r2_score(model=model):.2f}")
 
 
 main_run()
