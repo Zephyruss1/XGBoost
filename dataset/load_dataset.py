@@ -14,15 +14,15 @@ import numpy as np
 class InstallData:
     """
     - Keys:
-        - url: str | URL of the dataset
-        - target_folder: str | Target folder to download the dataset
+            * url: str | URL of the dataset
+            * target_folder: str | Target folder to download the dataset
     """
     def __init__(self, url: str, target_folder: str):
         self.url = url
         self.zip = None
         self.target_folder = target_folder
-        # self.data = pd.read_csv("/home/zephyrus/WSL-Projects/spotify-problem/dataset/spotify-2023.csv", encoding='utf-8', encoding_errors='ignore')
-        
+        self.data = pd.read_csv("/home/zephyrus/WSL-Projects/spotify-problem/dataset/spotify-2023.csv", encoding='utf-8', encoding_errors='ignore')
+
     def downloadZipfile(self):
         try:
             if "predicting-hiring-decisions-in-recruitment-data.zip" not in os.listdir(self.target_folder):
@@ -34,13 +34,13 @@ class InstallData:
                 print("[DATA INFO] Zip file already exists in the directory")
         except Exception as e:
             print(f"[ERROR] A error found. {e}")
-    
+
     def unzipFile(self):
         try:
             import zipfile
         except ImportError:
             raise ImportError("zipfile module is not installed. Please install it using 'pip install zipfile'")
-        
+
         if "predicting-hiring-decisions-in-recruitment-data.zip" in os.listdir(self.target_folder):
             if "recruitment_data.csv" not in os.listdir(self.target_folder):
                 zip_folder = os.path.join(self.target_folder, "predicting-hiring-decisions-in-recruitment-data.zip")
@@ -91,21 +91,21 @@ class LoadDataset:
     def splitData(self, test_size=0.2, random_state=42):
         # Ensure reproducibility
         np.random.seed(random_state)
-        
+
         # Generate shuffled indices
         indices = np.arange(len(self.data))
         np.random.shuffle(indices)
-        
+
         # Calculate split index
         split_idx = int(len(self.data) * (1 - test_size))
-        
+
         # Split indices
         train_indices, test_indices = indices[:split_idx], indices[split_idx:]
-        
+
         # Splitting features
         X = self.data.drop('HiringDecision', axis=1)
         y = self.data['HiringDecision']
-        
+
         # Use indices to create train/test splits
         X_train, X_test = X.iloc[train_indices], X.iloc[test_indices]
         y_train, y_test = y.iloc[train_indices], y.iloc[test_indices]
@@ -113,7 +113,7 @@ class LoadDataset:
         print(f"X_train: {X_train.shape}, X_test: {X_test.shape}\ny_train: {y_train.shape}, y_test: {y_test.shape}")
         print("---" * 10)
         return (X_train, X_test), (y_train, y_test)
-    
+
     def standardScaler(self):
         # Using Standard Scaler formula
         (X_train, X_test), (y_train, y_test) = self.splitData()
@@ -123,19 +123,19 @@ class LoadDataset:
         print("[DATA INFO] Data has been scaled successfully")
         print("---" * 10)
         return (X_train_scaled, X_test_scaled), (y_train, y_test)
-    
+
 if __name__ == "__main__":
     # Downloading dataset and unzipping
     installer = InstallData("kaggle datasets download -d rabieelkharoua/predicting-hiring-decisions-in-recruitment-data",
                              "/home/zephyrus/WSL-Projects/spotify-problem/dataset/")
     installer.downloadZipfile()
     installer.unzipFile()
-    
+
     # Cleaning data
     cleaner = DataCleaning()
     cleaner.checkData()
     cleaner.clearData()
-    
+
     # Splitting data
     load = LoadDataset()
     load.standardScaler()
