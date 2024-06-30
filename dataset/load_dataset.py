@@ -115,6 +115,7 @@ class LoadDataset:
         X_train, X_test = X.iloc[train_indices], X.iloc[test_indices]
         y_train, y_test = y.iloc[train_indices], y.iloc[test_indices]
 
+        print("---" * 10)
         print(f"X_train: {X_train.shape}, X_test: {X_test.shape}\ny_train: {y_train.shape}, y_test: {y_test.shape}")
         print("---" * 10)
         return (X_train, X_test), (y_train, y_test)
