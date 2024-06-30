@@ -11,7 +11,6 @@ import argparse
 def get_options():
     parser = argparse.ArgumentParser(description='XGBOOST options')
     parser.add_argument('--lr', type=float, default=0.01, help='Learning rate for each update step')
-    parser.add_argument('--optimizer', type=str, default='SGDW', help='Using GD for update')
     parser.add_argument('--max_depth', type=int, default=3, help='Maximum depth of the tree')
     parser.add_argument('--n_estimators', type=int, default=100, help='Maximum depth of the tree')
     parser.add_argument('--gamma', type=float, default=0.1,
