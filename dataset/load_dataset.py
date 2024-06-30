@@ -15,8 +15,9 @@ import numpy as np
 class InstallData:
     """
     - Keys:
-            * url: str | URL of the dataset
-            * target_folder: str | Target folder to download the dataset
+            1) url: str | URL of the dataset
+            2) target_folder: str | Target folder to download the dataset
+            3) zip: file | Initialize zip file
     """
 
     def __init__(self, url: str, target_folder: str):
@@ -56,6 +57,11 @@ class InstallData:
 
 
 class DataCleaning:
+    """
+    - Keys:
+            1) data: csv | The dataset
+    """
+
     def __init__(self):
         self.data = pd.read_csv("/home/zephyrus/WSL-Projects/spotify-problem/dataset/recruitment_data.csv",
                                 encoding='utf-8')
@@ -90,6 +96,11 @@ class DataCleaning:
 
 
 class LoadDataset:
+    """
+    - Keys:
+            1) data: csv | The dataset
+    """
+
     def __init__(self):
         self.data = DataCleaning().clearData()
 
