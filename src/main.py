@@ -8,15 +8,12 @@ Purpose: Run the project        |
 
 import sys
 from pathlib import Path
-
-sys.path.append(str(Path(__file__).resolve().parent.parent))
-
-import time
 from dataset.load_dataset import LoadDataset
 from xgbRegressor import Regressor
 from options import get_options
 import logging
 
+sys.path.append(str(Path(__file__).resolve().parent.parent))
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -26,10 +23,8 @@ args = get_options()
 def main_run():
     if __name__ == '__main__':
         dataset_loader = LoadDataset()  # Step 1: Instantiate the class
-        (X_train, X_test), (y_train, y_test) = dataset_loader.splitData()  # Step 2: Call the method on the instance
-
+        (X_train, X_test), (y_train, y_test) = dataset_loader.standardScaler()  # Step 2: Call the method on the instance
         regressor = Regressor(args=args, X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test)
-
         model = regressor.get_best_params()
 
         print(
