@@ -11,17 +11,18 @@ import os
 import pandas as pd
 import numpy as np
 
+
 class InstallData:
     """
     - Keys:
             * url: str | URL of the dataset
             * target_folder: str | Target folder to download the dataset
     """
+
     def __init__(self, url: str, target_folder: str):
         self.url = url
         self.zip = None
         self.target_folder = target_folder
-        self.data = pd.read_csv("/home/zephyrus/WSL-Projects/spotify-problem/dataset/spotify-2023.csv", encoding='utf-8', encoding_errors='ignore')
 
     def downloadZipfile(self):
         try:
@@ -56,14 +57,16 @@ class InstallData:
 
 class DataCleaning:
     def __init__(self):
-        self.data = pd.read_csv("/home/zephyrus/WSL-Projects/spotify-problem/dataset/recruitment_data.csv", encoding='utf-8', encoding_errors='ignore')
+        self.data = pd.read_csv("/home/zephyrus/WSL-Projects/spotify-problem/dataset/recruitment_data.csv",
+                                encoding='utf-8')
 
     def checkData(self):
         null_data = self.data.isna().sum()
         null_percentage = self.data.isna().sum() / len(self.data)
         null_percentage = null_percentage.apply(lambda x: f"{x:.1%}")
         total_duplicated = self.data.duplicated().sum()
-        print(f"\n============ Data info ============\n{null_data}\n--------------------------------\nNull percentage:\n{null_percentage}")
+        print(
+            f"\n============ Data info ============\n{null_data}\n--------------------------------\nNull percentage:\n{null_percentage}")
         print("---" * 10)
         print(f"Total missing values:  {sum(null_data)}\nTotal duplicated data: {total_duplicated}")
         print("---" * 10)
@@ -71,18 +74,20 @@ class DataCleaning:
     def clearData(self):
         if self.data.isna().sum().any():
             self.data.dropna(axis=1, inplace=True)
-            print("[DATA INFO] Dropped NaN values successfully")
+            print("[Downloader Info] Dropped NaN values successfully")
         elif self.data.duplicated().sum() > 0:
             self.data.drop_duplicates(inplace=True)
-            print("[DATA INFO] Dropped duplicates values successfully")
+            print("[Downloader Info] Dropped duplicates values successfully")
         else:
-            print("[DATA INFO] No missing values found in the dataset")
+            print("[Downloader Info] No missing values found in the dataset")
             return self.data
         # Write the cleaned DataFrame back to the CSV file
-        self.data.to_csv("/home/zephyrus/WSL-Projects/spotify-problem/dataset/recruitment_data.csv", index=False, encoding='utf-8')
-        print("[DATA INFO] Cleaned data has been written back to the CSV file.")
+        self.data.to_csv("/home/zephyrus/WSL-Projects/spotify-problem/dataset/recruitment_data.csv", index=False,
+                         encoding='utf-8')
+        print("[Downloader Info] Cleaned data has been written back to the CSV file.")
 
         return self.data
+
 
 class LoadDataset:
     def __init__(self):
@@ -117,17 +122,18 @@ class LoadDataset:
     def standardScaler(self):
         # Using Standard Scaler formula
         (X_train, X_test), (y_train, y_test) = self.splitData()
-        assert X_train is not None, "X_train is not defined."
         X_train_scaled = (X_train - X_train.mean()) / X_train.std()
         X_test_scaled = (X_test - X_test.mean()) / X_test.std()
         print("[DATA INFO] Data has been scaled successfully")
         print("---" * 10)
         return (X_train_scaled, X_test_scaled), (y_train, y_test)
 
+
 if __name__ == "__main__":
     # Downloading dataset and unzipping
-    installer = InstallData("kaggle datasets download -d rabieelkharoua/predicting-hiring-decisions-in-recruitment-data",
-                             "/home/zephyrus/WSL-Projects/spotify-problem/dataset/")
+    installer = InstallData(
+        "kaggle datasets download -d rabieelkharoua/predicting-hiring-decisions-in-recruitment-data",
+        "/home/zephyrus/WSL-Projects/spotify-problem/dataset/")
     installer.downloadZipfile()
     installer.unzipFile()
 
@@ -138,4 +144,5 @@ if __name__ == "__main__":
 
     # Splitting data
     load = LoadDataset()
+    # Standard Scale
     load.standardScaler()
