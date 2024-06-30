@@ -23,7 +23,7 @@ args = get_options()
 def main_run():
     if __name__ == '__main__':
         dataset_loader = LoadDataset()  # Step 1: Instantiate the class
-        (X_train, X_test), (y_train, y_test) = dataset_loader.standardScaler()  # Step 2: Call the method on the instance
+        (X_train, X_test), (y_train, y_test) = dataset_loader.standardScaler()  # Call the method on the instance
         regressor = Regressor(args=args, X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test)
         model = regressor.get_best_params()
 
